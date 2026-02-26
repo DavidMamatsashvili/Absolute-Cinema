@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import SearchResult from "./search-result";
+import SearchResult from "../Search-result/Search-result.jsx";
 
 
 const Header = () => {

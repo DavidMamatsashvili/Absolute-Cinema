@@ -1,4 +1,4 @@
-import SearchedMovie from "./searched-movie";
+import SearchedMovie from "../Searched-movie/Searched-movie.jsx";
 
 const SearchResult = ({ filteredMovies, search, onSearchChange, onClear, handleSearchDisplay }) => {
     const firstFive = filteredMovies.slice(0, 5)
