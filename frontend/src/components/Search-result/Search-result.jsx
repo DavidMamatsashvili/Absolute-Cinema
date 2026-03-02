@@ -1,7 +1,7 @@
 import SearchedMovie from "../Searched-movie/Searched-movie.jsx";
 
 const SearchResult = ({ filteredMovies, search, onSearchChange, onClear, handleSearchDisplay }) => {
-    const firstFive = filteredMovies.slice(0, 5)
+    const firstFive = filteredMovies.slice(0, 3)
     return (
         <div className="search-results">
             <div className="mobile-search-header">
