@@ -23,6 +23,7 @@ namespace Absolute_Cinema_Backend.Controllers
         public async Task<IActionResult> GetMovies([FromQuery]QueryDto query)
         {
             var result = await _showtimeService.GetShowtimesJoinedWithMoviesAsync(query);
+            if(result == null) return NotFound();
             return Ok(result);
         }
 
@@ -30,10 +31,15 @@ namespace Absolute_Cinema_Backend.Controllers
         public async Task<IActionResult> GetMovie(int id)
         {
             var result = await _movieService.GetMovieDetailsAsync(id);
-            if (result == null)
-            {
-                return NotFound();
-            }
+            if (result == null) return NotFound();
+            return Ok(result);
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchMovieByTitle([FromQuery(Name = "query")]string query)
+        {
+            var result = await _showtimeService.SearchMoviesByTitle(query);
+            if(result == null) return NotFound();
             return Ok(result);
         }
     }

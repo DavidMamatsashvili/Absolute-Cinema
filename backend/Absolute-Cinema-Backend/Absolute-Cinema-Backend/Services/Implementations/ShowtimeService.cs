@@ -15,9 +15,13 @@ namespace Absolute_Cinema_Backend.Services.Implementations
         {
             _showtimeRepository = showtimeRepository;
         }
-        public async Task<List<Showtime>> GetShowtimesJoinedWithMoviesAsync(QueryDto query)
+        public async Task<List<FrontPageMovieDto>> GetShowtimesJoinedWithMoviesAsync(QueryDto query)
         {
-            var result = _showtimeRepository.GetShowtimes().AsQueryable();
+            ArgumentNullException.ThrowIfNull(query);
+            var result = _showtimeRepository.GetShowtimes()
+                .Include(x=>x.Movie)
+                    .ThenInclude(x=>x.Rating)
+                .AsQueryable();
 
             if (query.SessionTypes?.Any() == true)
             {
@@ -41,12 +45,41 @@ namespace Absolute_Cinema_Backend.Services.Implementations
 
             var showtimes = await result
                 .GroupBy(x => x.MovieId)
-                .Select(g => g
-                    .OrderBy(s => s.StartDateTime)
-                    .First())
+                .Select(g => g.OrderBy(s => s.StartDateTime)
+                .Select(k => 
+                    new FrontPageMovieDto(
+                        k.Movie.Id, 
+                        k.Movie.Title,
+                        k.Movie.Rating.Title,
+                        k.Movie.DurationMinutes,
+                        k.Movie.PosterUrl))
+                .First())
                 .ToListAsync();
 
             return showtimes;
+        }
+
+        public async Task<List<FrontPageMovieDto>> SearchMoviesByTitle(string searchText)
+        {
+            ArgumentNullException.ThrowIfNull(searchText);
+            var result = _showtimeRepository.GetShowtimes()
+                .Include(x => x.Movie)
+                    .ThenInclude(x=>x.Rating)
+                .AsQueryable();
+
+            List<FrontPageMovieDto> movies = await result
+                .Where(x => x.Movie.Title.ToLower().StartsWith(searchText.ToLower()))
+                .GroupBy(x => x.Movie.Id)
+                .Select(x => 
+                    new FrontPageMovieDto(
+                        x.FirstOrDefault().Movie.Id,
+                        x.FirstOrDefault().Movie.Title,
+                        x.FirstOrDefault().Movie.Rating.Title,
+                        x.FirstOrDefault().Movie.DurationMinutes,
+                        x.FirstOrDefault().Movie.PosterUrl))
+                .ToListAsync();
+
+            return movies;
         }
     }
 }
