@@ -4,7 +4,7 @@ import SearchResult from "../Search-result/Search-result.jsx";
 
 const Header = () => {
     const [search, setSearch] = useState('');
-    const [openSearch, setOpenSearch] = useState(true);
+    const [openSearch, setOpenSearch] = useState(false);
 
     const movies = [
         { name: "cvjdkf", id: 1 },
@@ -41,7 +41,7 @@ const Header = () => {
                         <img src="images/search_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" className="search-logo" alt="" />
                     </div>
                     <div className="desktop-search">
-                        <input type="text" id="desktop-search-input" value={search} onChange={handleSearch} onFocus={() => setOpenSearch(true)} onBlur={() => setOpenSearch(true)} placeholder="ძებნა" />
+                        <input type="text" id="desktop-search-input" value={search} onChange={handleSearch} onFocus={() => setOpenSearch(true)} onBlur={() => setOpenSearch(false)} placeholder="ძებნა" />
                         <img src={search ? "images/close_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" : "images/search_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png"} className="search-logo" onClick={handleClear} alt="" />
                     </div>
                     <div className="user">
